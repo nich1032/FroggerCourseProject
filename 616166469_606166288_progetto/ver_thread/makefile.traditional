@@ -1,0 +1,42 @@
+# Nome dell'eseguibile
+TARGET = frogger
+
+# Regola di default
+all: build frogger
+
+# Creazione della directory build
+build:
+	mkdir -p build
+
+# Regola per costruire l'eseguibile
+frogger: build/main.o build/game.o build/player.o build/crocodile.o build/projectiles.o build/utils.o build/buffer.o
+	gcc -o frogger build/main.o build/game.o build/player.o build/crocodile.o build/projectiles.o build/utils.o build/buffer.o -lncurses -lpthread -lm
+
+# Regole per costruire i file oggetto con dipendenze esplicite
+build/main.o: src/main.c include/game.h include/utils.h
+	gcc -c src/main.c -o build/main.o -Wall -Wextra -Iinclude -g
+
+build/game.o: src/game.c include/game.h include/utils.h
+	gcc -c src/game.c -o build/game.o -Wall -Wextra -Iinclude -g
+
+build/player.o: src/player.c include/game.h
+	gcc -c src/player.c -o build/player.o -Wall -Wextra -Iinclude -g
+
+build/crocodile.o: src/crocodile.c include/game.h
+	gcc -c src/crocodile.c -o build/crocodile.o -Wall -Wextra -Iinclude -g
+
+build/projectiles.o: src/projectiles.c include/game.h
+	gcc -c src/projectiles.c -o build/projectiles.o -Wall -Wextra -Iinclude -g
+
+build/utils.o: src/utils.c include/utils.h include/game.h
+	gcc -c src/utils.c -o build/utils.o -Wall -Wextra -Iinclude -g
+
+build/buffer.o: src/buffer.c include/game.h
+	gcc -c src/buffer.c -o build/buffer.o -Wall -Wextra -Iinclude -g
+
+# Pulizia dei file compilati
+clean:
+	rm -rf build frogger
+
+# Regole di utilità
+.PHONY: all clean
